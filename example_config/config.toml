@@ -66,6 +66,16 @@ tx_ant = "TX/RX"
 rx_gain_pga = 50.0
 tx_gain_pga = 35.0
 
+# Sane defaults for bladeRF 2.0 micro
+# [phy_io.soapysdr.iocfg_bladerf]
+# rx_ant = "RX"
+# tx_ant = "TX"
+# rx_gain_lna = 3.0
+# rx_gain_vga1 = 20.0
+# rx_gain_vga2 = 10.0
+# tx_gain_vga1 = 10.0
+# tx_gain_vga2 = 10.0
+
 ###############################################################################
 
 # Network Information
