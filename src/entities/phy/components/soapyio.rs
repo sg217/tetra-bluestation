@@ -128,7 +128,11 @@ impl SoapyIo {
         // Get default settings based on detected hardware
         let driver_key = dev.driver_key().unwrap_or_default();
         let hardware_key = dev.hardware_key().unwrap_or_default();
-        let label = dev.label().unwrap_or_default();
+        let label = dev
+            .hardware_info()
+            .ok()
+            .and_then(|info| info.get("label").cloned())
+            .unwrap_or_default();
         let mut sdr_settings = SdrSettings::get_defaults(&driver_key, &hardware_key);
         let is_bladerf2 = driver_key == "bladerf"
             && (hardware_key.contains("bladerf2")
