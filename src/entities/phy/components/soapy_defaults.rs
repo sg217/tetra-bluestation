@@ -119,7 +119,7 @@ impl SdrSettings {
     pub fn defaults_bladerf2() -> Self {
         SdrSettings {
             name: "bladeRF 2.0 micro".to_string(),
-            fs_bs: 512e3,
+            fs_bs: 4e6,
             fs_monitor: 16384e3,
             rx_ant: Some("RX".to_string()),
             tx_ant: Some("TX".to_string()),
