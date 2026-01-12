@@ -1,4 +1,3 @@
-
 #[derive(Clone, Debug)]
 pub struct SdrSettings {
     /// Name used to print which SDR was detected
@@ -27,6 +26,8 @@ impl SdrSettings {
             (_, "LimeSDR-Mini_v2") => Self::defaults_limesdr_mini_v2(),
             ("sx", _) => Self::defaults_sxceiver(),
             ("uhd", _) | ("b200", _) => Self::defaults_usrp_b2x0(),
+            (_, "bladerf2") => Self::defaults_bladerf(),
+
             _ => Self::unknown(),
         }
     }
@@ -55,10 +56,7 @@ impl SdrSettings {
                 ("TIA".to_string(), 10.0),
                 ("PGA".to_string(), 10.0),
             ],
-            tx_gain: vec![
-                ("PAD".to_string(), 52.0),
-                ("IAMP".to_string(), 3.0),
-            ],
+            tx_gain: vec![("PAD".to_string(), 52.0), ("IAMP".to_string(), 3.0)],
         }
     }
 
@@ -74,10 +72,7 @@ impl SdrSettings {
                 ("LNA".to_string(), 18.0),
                 ("PGA".to_string(), 0.0),
             ],
-            tx_gain: vec![
-                ("PAD".to_string(), 30.0),
-                ("IAMP".to_string(), 6.0),
-            ],
+            tx_gain: vec![("PAD".to_string(), 30.0), ("IAMP".to_string(), 6.0)],
         }
     }
 
@@ -88,14 +83,20 @@ impl SdrSettings {
             fs_monitor: 600e3, // monitoring is not really possible with SXceiver
             rx_ant: Some("RX".to_string()),
             tx_ant: Some("TX".to_string()),
-            rx_gain: vec![
-                ("LNA".to_string(), 42.0),
-                ("PGA".to_string(), 16.0),
-            ],
-            tx_gain: vec![
-                ("DAC".to_string(), 9.0),
-                ("MIXER".to_string(), 30.0),
-            ],
+            rx_gain: vec![("LNA".to_string(), 42.0), ("PGA".to_string(), 16.0)],
+            tx_gain: vec![("DAC".to_string(), 9.0), ("MIXER".to_string(), 30.0)],
+        }
+    }
+
+    fn defaults_bladerf() -> Self {
+        SdrSettings {
+            name: "bladeRF".to_string(),
+            fs_bs: 4e6,
+            fs_monitor: 16384e3,
+            rx_ant: Some("RX".to_string()),
+            tx_ant: Some("TX".to_string()),
+            rx_gain: vec![],
+            tx_gain: vec![],
         }
     }
 
@@ -106,12 +107,8 @@ impl SdrSettings {
             fs_monitor: 16384e3,
             rx_ant: Some("TX/RX".to_string()),
             tx_ant: Some("TX/RX".to_string()),
-            rx_gain: vec![
-                ("PGA".to_string(), 50.0),
-            ],
-            tx_gain: vec![
-                ("PGA".to_string(), 35.0),
-            ],
+            rx_gain: vec![("PGA".to_string(), 50.0)],
+            tx_gain: vec![("PGA".to_string(), 35.0)],
         }
     }
 }
