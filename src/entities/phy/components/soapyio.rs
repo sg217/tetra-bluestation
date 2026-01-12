@@ -131,7 +131,7 @@ impl SoapyIo {
         let label = dev
             .hardware_info()
             .ok()
-            .and_then(|info| info.get("label").cloned())
+            .and_then(|a| a.get("label").map(|s| s.to_string()))
             .unwrap_or_default();
         let mut sdr_settings = SdrSettings::get_defaults(&driver_key, &hardware_key);
         let is_bladerf2 = driver_key == "bladerf"
