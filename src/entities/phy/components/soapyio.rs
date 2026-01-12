@@ -128,7 +128,15 @@ impl SoapyIo {
         // Get default settings based on detected hardware
         let driver_key = dev.driver_key().unwrap_or_default();
         let hardware_key = dev.hardware_key().unwrap_or_default();
+        let label = dev.label().unwrap_or_default();
         let mut sdr_settings = SdrSettings::get_defaults(&driver_key, &hardware_key);
+        let is_bladerf2 = driver_key == "bladerf"
+            && (hardware_key.contains("bladerf2")
+                || label.contains("BladeRF 2")
+                || label.contains("bladeRF 2"));
+        if is_bladerf2 {
+            sdr_settings = SdrSettings::defaults_bladerf2();
+        }
         
         // Apply user configuration overrides based on driver type
         let driver = soapy_cfg.io_cfg.get_soapy_driver_name();
@@ -226,12 +234,27 @@ impl SoapyIo {
             }
         }
 
-        tracing::info!("Got driver key '{}' hardware_key '{}', using settings for {}", 
-                driver_key, hardware_key, sdr_settings.name);
+        tracing::info!(
+            "Got driver key '{}' hardware_key '{}' label '{}', using settings for {} (fs_bs={})",
+            driver_key,
+            hardware_key,
+            label,
+            sdr_settings.name,
+            sdr_settings.fs_bs
+        );
 
         let samp_rate = match mode {
             Mode::Bs | Mode::Ms => sdr_settings.fs_bs,
             Mode::Mon => sdr_settings.fs_monitor
+        };
+        let samp_rate = if is_bladerf2 && samp_rate < 521e3 {
+            tracing::error!(
+                "bladeRF 2.0 micro requires sample rate >= 0.521 MHz, clamping from {}",
+                samp_rate
+            );
+            521e3
+        } else {
+            samp_rate
         };
         let mut rx_fs: f64 = 0.0;
         if rx_enabled {
