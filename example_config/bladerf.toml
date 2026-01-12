@@ -60,16 +60,16 @@ ppm_err = 0             # Adjust if your SDR has a non-negligible tuning error
 # tx_gain_mixer = 30.0
 
 # Sane defaults for Ettus USRP B210 (and probably B200)
-[phy_io.soapysdr.iocfg_usrpb2xx]
-rx_ant = "TX/RX"
-tx_ant = "TX/RX"
-rx_gain_pga = 50.0
-tx_gain_pga = 35.0
+# [phy_io.soapysdr.iocfg_usrpb2xx]
+# rx_ant = "TX/RX"
+# tx_ant = "TX/RX"
+# rx_gain_pga = 50.0
+# tx_gain_pga = 35.0
 
 
-#[phy_io.soapysdr.iocfg_bladerf]
-# rx_ant = "RX"
-# tx_ant = "TX"
+[phy_io.soapysdr.iocfg_bladerf]
+rx_ant = "RX"
+tx_ant = "TX"
 # gains optionnels (on peut ajuster plus tard)
 # rx_gain = 35.0
 # tx_gain = 45.0
