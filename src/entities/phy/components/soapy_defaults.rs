@@ -27,6 +27,7 @@ impl SdrSettings {
             (_, "LimeSDR-Mini_v2") => Self::defaults_limesdr_mini_v2(),
             ("sx", _) => Self::defaults_sxceiver(),
             ("uhd", _) | ("b200", _) => Self::defaults_usrp_b2x0(),
+            ("bladerf", _) => Self::defaults_bladerf2(),
             _ => Self::unknown(),
         }
     }
@@ -111,6 +112,25 @@ impl SdrSettings {
             ],
             tx_gain: vec![
                 ("PGA".to_string(), 35.0),
+            ],
+        }
+    }
+
+    pub fn defaults_bladerf2() -> Self {
+        SdrSettings {
+            name: "bladeRF 2.0 micro".to_string(),
+            fs_bs: 512e3,
+            fs_monitor: 16384e3,
+            rx_ant: Some("RX".to_string()),
+            tx_ant: Some("TX".to_string()),
+            rx_gain: vec![
+                ("LNA".to_string(), 3.0),
+                ("VGA1".to_string(), 20.0),
+                ("VGA2".to_string(), 10.0),
+            ],
+            tx_gain: vec![
+                ("VGA1".to_string(), 10.0),
+                ("VGA2".to_string(), 10.0),
             ],
         }
     }

@@ -198,6 +198,29 @@ impl SoapyIo {
                     sdr_settings.tx_gain = tx_gains;
                 }
             }
+            "bladerf" => {
+                if let Some(cfg) = &soapy_cfg.io_cfg.iocfg_bladerf {
+                    // Override antenna settings if specified
+                    if let Some(ref ant) = cfg.rx_ant {
+                        sdr_settings.rx_ant = Some(ant.clone());
+                    }
+                    if let Some(ref ant) = cfg.tx_ant {
+                        sdr_settings.tx_ant = Some(ant.clone());
+                    }
+
+                    // Override gain settings
+                    let mut rx_gains = Vec::new();
+                    rx_gains.push(Self::get_gain_or_default("LNA", cfg.rx_gain_lna, &sdr_settings));
+                    rx_gains.push(Self::get_gain_or_default("VGA1", cfg.rx_gain_vga1, &sdr_settings));
+                    rx_gains.push(Self::get_gain_or_default("VGA2", cfg.rx_gain_vga2, &sdr_settings));
+                    sdr_settings.rx_gain = rx_gains;
+
+                    let mut tx_gains = Vec::new();
+                    tx_gains.push(Self::get_gain_or_default("VGA1", cfg.tx_gain_vga1, &sdr_settings));
+                    tx_gains.push(Self::get_gain_or_default("VGA2", cfg.tx_gain_vga2, &sdr_settings));
+                    sdr_settings.tx_gain = tx_gains;
+                }
+            }
             _ => {
                 tracing::warn!("Unknown SoapySDR driver '{}', using default settings", driver);
             }

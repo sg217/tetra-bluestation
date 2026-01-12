@@ -7,7 +7,7 @@ use serde::Deserialize;
 use toml::Value;
 
 use crate::config::stack_config::{CfgPhyIo, PhyBackend, CfgCellInfo, CfgNetInfo, SharedConfig, StackConfig, StackMode, StackState};
-use super::stack_config_soapy::{CfgSoapySdr, LimeSdrCfg, SXceiverCfg, UsrpB2xxCfg};
+use super::stack_config_soapy::{BladeRfCfg, CfgSoapySdr, LimeSdrCfg, SXceiverCfg, UsrpB2xxCfg};
 
 /// Build `SharedConfig` from a TOML configuration file
 pub fn from_toml_str(toml_str: &str) -> Result<SharedConfig, Box<dyn std::error::Error>> {
@@ -135,6 +135,18 @@ fn apply_phy_io_patch(dst: &mut CfgPhyIo, src: PhyIoDto) {
                 rx_gain_pga: sx_dto.rx_gain_pga,
                 tx_gain_dac: sx_dto.tx_gain_dac,
                 tx_gain_mixer: sx_dto.tx_gain_mixer,
+            });
+        }
+
+        if let Some(bladerf_dto) = soapy_dto.iocfg_bladerf {
+            soapy_cfg.io_cfg.iocfg_bladerf = Some(BladeRfCfg {
+                rx_ant: bladerf_dto.rx_ant,
+                tx_ant: bladerf_dto.tx_ant,
+                rx_gain_lna: bladerf_dto.rx_gain_lna,
+                rx_gain_vga1: bladerf_dto.rx_gain_vga1,
+                rx_gain_vga2: bladerf_dto.rx_gain_vga2,
+                tx_gain_vga1: bladerf_dto.tx_gain_vga1,
+                tx_gain_vga2: bladerf_dto.tx_gain_vga2,
             });
         }
         
@@ -285,6 +297,9 @@ struct SoapySdrDto {
     #[serde(default)]
     pub iocfg_sxceiver: Option<SXceiverDto>,
 
+    #[serde(default)]
+    pub iocfg_bladerf: Option<BladeRfDto>,
+
     #[serde(flatten)]
     extra: HashMap<String, Value>,
 }
@@ -316,6 +331,17 @@ struct SXceiverDto {
     pub rx_gain_pga: Option<f64>,
     pub tx_gain_dac: Option<f64>,
     pub tx_gain_mixer: Option<f64>,
+}
+
+#[derive(Deserialize)]
+struct BladeRfDto {
+    pub rx_ant: Option<String>,
+    pub tx_ant: Option<String>,
+    pub rx_gain_lna: Option<f64>,
+    pub rx_gain_vga1: Option<f64>,
+    pub rx_gain_vga2: Option<f64>,
+    pub tx_gain_vga1: Option<f64>,
+    pub tx_gain_vga2: Option<f64>,
 }
 
 #[derive(Default, Deserialize)]

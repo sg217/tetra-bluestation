@@ -14,6 +14,10 @@ pub struct SoapySdrIoCfg {
     /// SXceiver configuration
     #[serde(default)]
     pub iocfg_sxceiver: Option<SXceiverCfg>,
+
+    /// bladeRF configuration
+    #[serde(default)]
+    pub iocfg_bladerf: Option<BladeRfCfg>,
 }
 
 impl SoapySdrIoCfg {
@@ -24,6 +28,8 @@ impl SoapySdrIoCfg {
             "lime"
         } else if self.iocfg_sxceiver.is_some() {
             "sx"
+        } else if self.iocfg_bladerf.is_some() {
+            "bladerf"
         } else {
             "unknown"
         }
@@ -36,6 +42,7 @@ impl Default for SoapySdrIoCfg {
             iocfg_usrpb2xx: None,
             iocfg_limesdr: None,
             iocfg_sxceiver: None,
+            iocfg_bladerf: None,
         }
     }
 }
@@ -72,6 +79,18 @@ pub struct SXceiverCfg {
     pub rx_gain_pga: Option<f64>,
     pub tx_gain_dac: Option<f64>,
     pub tx_gain_mixer: Option<f64>,
+}
+
+/// Configuration for bladeRF
+#[derive(Debug, Clone, Deserialize)]
+pub struct BladeRfCfg {
+    pub rx_ant: Option<String>,
+    pub tx_ant: Option<String>,
+    pub rx_gain_lna: Option<f64>,
+    pub rx_gain_vga1: Option<f64>,
+    pub rx_gain_vga2: Option<f64>,
+    pub tx_gain_vga1: Option<f64>,
+    pub tx_gain_vga2: Option<f64>,
 }
 
 /// SoapySDR configuration
