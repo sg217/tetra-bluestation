@@ -299,9 +299,6 @@ struct PhyIoDto {
     dl_input_file: Option<String>,
 
     #[serde(default)]
-#[serde(default)]
-pub soapysdr: Option<SoapySdrDto>,
-
     pub soapysdr: Option<SoapySdrDto>,
 
     #[serde(flatten)]
